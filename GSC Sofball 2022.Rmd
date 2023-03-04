@@ -1,0 +1,74 @@
+---
+title: "Worksheet 7-2"
+author: "William Easter, Jr."
+date: "2/22/2023"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+<style type="text/css">
+
+h1.title {
+  font-size: 38px;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+</style>
+
+
+
+
+```{r, message=FALSE}
+library(HistData)
+library(tidyverse)
+library(zeallot)
+library(ggplot2)
+library(gridExtra)
+# Set the working directory to where the CSV file is located
+setwd("C:/Users/weyen/OneDrive/Documents/Warhawk Softball/Warhawk-Softball")
+
+# Import the CSV file using read.csv()
+wh <- read.csv("2022 GSC SOFTBALL HITTING.csv")
+wh
+
+summary(wh)
+c(q1,md,mm,q3)%<-%summary(wh)[2:5]
+mad_values <- apply(wh[, 2:ncol(wh)], 2, mad)
+mad_values
+iqr<-q3<-q1
+apply(wh[, 2:ncol(wh)], 2, fivenum)
+#fivenum(wh)[2:5]
+#m <- sum(wh)/length(wh)
+
+bp_AVG<-wh %>% 
+  ggplot(aes(AVG)) +
+  geom_boxplot(color="orange", fill="black", size=1, outlier.shape = 7)
+
+qq_AVG<-ggplot(wh, aes(sample = AVG)) +
+  geom_qq()
+
+d_AVG<-wh %>% ggplot(aes(AVG)) +
+  geom_density(fill="orange", adjust=.05)+ggtitle("Density Plot")
+
+h_AVG<-wh %>% 
+  ggplot(aes(AVG)) + 
+  geom_histogram(color='black', fill='orange')+ggtitle("Histogram")
+
+b_AVG<-wh %>% ggplot(aes(AVG)) + geom_bar(color= 'orange', fill='black')+ggtitle("Barplot")
+
+grid.arrange(bp_AVG,qq_AVG,d_AVG,h_AVG,b_AVG, ncol = 3, nrow=2 )
+``` 
+
+
