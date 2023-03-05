@@ -44,7 +44,7 @@ AUM
 
 
 # Leauge-wise Batting Average Visualisation
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, fig.width = 100, fig.asp = 4}
 
 bp_AVG_AUM<-AUM %>% 
   ggplot(aes(AVG)) +
@@ -97,6 +97,62 @@ b_AVG_GSC<-GSC %>% ggplot(aes(AVG)) + geom_bar(color= 'red', fill='yellow')+ggti
 grid.arrange(bp_AVG_AUM,bp_AVG_UAH,bp_AVG_GSC,qq_AVG_AUM,qq_AVG_UAH,qq_AVG_GSC,
              d_AVG_AUM,d_AVG_UAH,d_AVG_GSC,h_AVG_AUM,h_AVG_UAH,h_AVG_GSC,
              b_AVG_AUM,b_AVG_UAH,b_AVG_GSC, ncol = 3 )
+``` 
+# Leauge-wise OPS Visualisation
+
+```{r, echo=FALSE, fig.width = 15, fig.asp = 2}
+
+bp_OPS_AUM<-AUM %>% 
+  ggplot(aes(OPS)) +
+  geom_boxplot(color="orange", fill="black", size=.2, outlier.shape = 7)+ggtitle("AUM Boxplot")
+
+bp_OPS_UAH<-UAH %>% 
+  ggplot(aes(OPS)) +
+  geom_boxplot(color="blue", fill="black", size=.2, outlier.shape = 7)+ggtitle("UAH Boxplot")
+
+bp_OPS_GSC<-GSC %>% 
+  ggplot(aes(OPS)) +
+  geom_boxplot(color="red", fill="yellow", size=.2, outlier.shape = 7)+ggtitle("GSC Boxplot")
+
+qq_OPS_AUM<-ggplot(AUM, aes(sample = OPS)) +
+  geom_qq()+ggtitle("AUM qq Plot")
+
+qq_OPS_UAH<-ggplot(UAH, aes(sample = OPS)) +
+  geom_qq()+ggtitle("UAH qq Plot")
+
+qq_OPS_GSC<-ggplot(GSC, aes(sample = OPS)) +
+  geom_qq()+ggtitle("GSC qq Plot")
+
+d_OPS_AUM<-AUM %>% ggplot(aes(OPS)) +
+  geom_density(fill="orange", adjust=.1)+ggtitle("AUM Density Plot")
+
+d_OPS_UAH<-UAH %>% ggplot(aes(OPS)) +
+  geom_density(fill="blue", adjust=.1)+ggtitle("UAH Density Plot")
+
+d_OPS_GSC<-GSC %>% ggplot(aes(OPS)) +
+  geom_density(color='yellow',fill="red", adjust=.1)+ggtitle("GSC Density Plot")
+
+h_OPS_AUM<-AUM %>% 
+  ggplot(aes(OPS)) + 
+  geom_histogram(color='black', fill='orange',bins=10)+ggtitle("AUM Histogram")
+
+h_OPS_UAH<-UAH %>% 
+  ggplot(aes(OPS)) + 
+  geom_histogram(color='black', fill='blue',bins=10)+ggtitle("UAH Histogram")
+
+h_OPS_GSC<-GSC %>% 
+  ggplot(aes(OPS)) + 
+  geom_histogram(color='yellow', fill='red',bins=10)+ggtitle("GSC Histogram")
+
+b_OPS_AUM<-AUM %>% ggplot(aes(OPS)) + geom_bar(color= 'orange', fill='black')+ggtitle("AUM Barplot")
+
+b_OPS_UAH<-UAH %>% ggplot(aes(OPS)) + geom_bar(color= 'blue', fill='black')+ggtitle("AUM Barplot")
+
+b_OPS_GSC<-GSC %>% ggplot(aes(OPS)) + geom_bar(color= 'red', fill='yellow')+ggtitle("GSC Barplot")
+
+grid.arrange(bp_OPS_AUM,bp_OPS_UAH,bp_OPS_GSC,qq_OPS_AUM,qq_OPS_UAH,qq_OPS_GSC,
+             d_OPS_AUM,d_OPS_UAH,d_OPS_GSC,h_OPS_AUM,h_OPS_UAH,h_OPS_GSC,
+             b_OPS_AUM,b_OPS_UAH,b_OPS_GSC, ncol = 3 )
 ``` 
 
 
