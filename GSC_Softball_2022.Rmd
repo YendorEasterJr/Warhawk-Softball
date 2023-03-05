@@ -8,9 +8,41 @@ output:
     df_print: paged
   word_document: default
 ---
+```{r, echo=FALSE, fig.align="center"}
+library(knitr)
+include_graphics("AUM.jpg")
+```
 
-This project will analyze overall Gulf South Conference hitter stats to explore 
-trends that led to how AUM became 2022 Conference Champions. 
+
+## In 2022, the softball team representing Auburn University at Montgomery were 
+## regular season and tournament champions in the Gulf South Conference. They 
+## went on to become NCAA regional champions and super-regional champions,  
+## and went on to Denver to represent AUM(Auburn University at Montgomery)  
+## at the NCAA D2 Softball World Series.
+# ==========================================================================
+
+## This project will analyze overall Gulf South Conference(GSC) hitter through a 
+## method of sabermetrics to explore trends that led to how AUM became 2022 
+## Conference Champions. This presentation will compare statistics to compare 
+## the year's offensive performance between AUM and GSC listed from data  
+## scraped directly from the Gulf South Conference's own website.Furthermore, 
+## AUM and UAH(University of Alabama-Huntsville) will be directly compared,  
+## since the teams faced off in th GSC tournament final and the NCAA Super 
+## Regional final.
+# ==================================================
+## My hypothesis is that the hitting data will present trends that indicate how 
+## AUM dominated their competition. It should be noted that defensive and 
+## pitching data are not currently being analyzed in this project. Thus, if the 
+## hypothesis is significantly contradicted this could be pointing to that the 
+## defensive/pitching could explain AUM's success. Likely through analysis 
+## beyond the current scope of this presentation, all three categories play key 
+## roles in the 2022 season.
+
+=
+
+=
+
+=
 
 # Definitions provided by mlb.com
 
@@ -108,6 +140,11 @@ A sacrifice bunt occurs when a player is successful in his
 attempt to advance a runner (or multiple runners) at least one base with a bunt. 
 In this vein, the batter is sacrificing himself (giving up an out) in order to 
 move another runner closer to scoring.
+
+```{r, echo=FALSE}
+include_graphics("GSC_map.jpg")
+include_graphics("Gulf_South_Conference_logo.svg.PNG")
+```
 
 ```{r echo=FALSE, message=FALSE, results=FALSE}
 library(HistData)
