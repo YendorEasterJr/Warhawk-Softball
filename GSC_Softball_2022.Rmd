@@ -8,10 +8,48 @@ output:
     df_print: paged
   word_document: default
 ---
-```{r, echo=FALSE, fig.align="center"}
+```{r, echo=FALSE,message=FALSE, fig.align="center"}
 library(knitr)
+library(HistData)
+library(tidyverse)
+library(zeallot)
+library(ggplot2)
+library(gridExtra)
+library(ggExtra)
 include_graphics("AUM.jpg")
 ```
+```{r, echo=FALSE}
+include_graphics("GSC_map.jpg")
+include_graphics("Gulf_South_Conference_logo.svg.PNG")
+```
+
+```{r echo=FALSE, message=FALSE, results=FALSE}
+
+# Set the working directory to where the CSV file is located
+setwd("C:/Users/weyen/OneDrive/Documents/Warhawk Softball/Warhawk-Softball")
+
+# Import the CSV file using read.csv()
+wh <- read.csv("2022 GSC SOFTBALL HITTING.csv")
+#wh
+
+summary(wh)
+#c(q1,md,mm,q3)%<-%summary(wh)[3:ncol(wh)]
+mad_values <- apply(wh[,3:ncol(wh)],2, mad)
+mad_values
+#iqr<-q3<-q1
+#iqr
+apply(wh[, 3:ncol(wh)], 2, fivenum)
+
+AUM<-wh %>% filter(School == "Auburn Montgomery")
+UAH<-wh %>% filter(School == "Alabama Huntsville")
+GSC<-wh %>% filter(School != "Auburn Montgomery")
+GSC
+UAH
+AUM
+
+```
+
+
 
 
 ## In 2022, the softball team representing Auburn University at Montgomery were 
@@ -39,10 +77,45 @@ include_graphics("AUM.jpg")
 ## roles in the 2022 season.
 
 =
-
+=
+=
+=
 =
 
-=
+
+```{r, echo=FALSE}
+g <- ggplot(wh, aes(School))
+g + geom_bar(aes(School), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  labs(title="Player Count per school", 
+       subtitle="Top League Batters", 
+       caption="Source: GSC.com")
+
+theme_set(theme_bw())
+
+```
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+colors <- c("blue", "orange",  "#FF0000","#228B22", "#8A2BE2",
+            "#7FFF00", "#FFC0CB", "#008080", "#FF1493", "#00BFFF",
+            "#F4A460", "#800080", "#00FF00")
+
+# Create the plot
+g <- ggplot(wh, aes(AVG, OPS, group=School, color=School)) + 
+  geom_count() + 
+  geom_smooth(method="lm", se=F) +
+  # Set the color palette using scale_color_manual
+  scale_color_manual(values=colors)
+
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+
+
 
 # Definitions provided by mlb.com
 
@@ -142,39 +215,26 @@ In this vein, the batter is sacrificing himself (giving up an out) in order to
 move another runner closer to scoring.
 
 ```{r, echo=FALSE}
-include_graphics("GSC_map.jpg")
-include_graphics("Gulf_South_Conference_logo.svg.PNG")
+# plot
+g <- ggplot(wh, aes(AVG,School))
+g + geom_violin() + 
+  labs(title="Violin plot", 
+       subtitle="Batting AVG by Team",
+       caption="Source: GSC.com",
+       x="Batting Average",
+       y="School")
+
+theme_set(theme_classic())
+
+# Plot
+g <- ggplot(wh, aes(AVG))
+g + geom_density(aes(fill=factor(School)), alpha=0.8) + 
+    labs(title="Density plot", 
+         subtitle="Batting Average by School",
+         caption="Source: GSC.com",
+         x="Batting Average",
+         fill="School")
 ```
-
-```{r echo=FALSE, message=FALSE, results=FALSE}
-library(HistData)
-library(tidyverse)
-library(zeallot)
-library(ggplot2)
-library(gridExtra)
-# Set the working directory to where the CSV file is located
-setwd("C:/Users/weyen/OneDrive/Documents/Warhawk Softball/Warhawk-Softball")
-
-# Import the CSV file using read.csv()
-wh <- read.csv("2022 GSC SOFTBALL HITTING.csv")
-#wh
-
-summary(wh)
-c(q1,md,mm,q3)%<-%summary(wh)[2:5]
-mad_values <- apply(wh[,3:ncol(wh)],2, mad)
-mad_values
-iqr<-q3<-q1
-iqr
-apply(wh[, 3:ncol(wh)], 2, fivenum)
-
-AUM<-wh %>% filter(School == "Auburn Montgomery")
-UAH<-wh %>% filter(School == "Alabama Huntsville")
-GSC<-wh %>% filter(School != "Auburn Montgomery")
-GSC
-UAH
-AUM
-```
-
 
 # Leauge-wise Batting Average Visualisation
 ```{r, echo=FALSE,  fig.height=8, fig.asp = 1.15}
