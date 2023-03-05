@@ -1,7 +1,7 @@
 ---
-title: "Worksheet 7-2"
+title: "Softball 2022 Hitting: AUM vs. Gulf South Conference"
 author: "William Easter, Jr."
-date: "2/22/2023"
+date: "3/5/2023"
 output:
   pdf_document: default
   html_document:
@@ -9,28 +9,11 @@ output:
   word_document: default
 ---
 
-<style type="text/css">
-
-h1.title {
-  font-size: 38px;
-  text-align: center;
-}
-h4.author { /* Header 4 - and the author and data headers use this too  */
-    font-size: 18px;
-  font-family: "Times New Roman", Times, serif;
-  text-align: center;
-}
-h4.date { /* Header 4 - and the author and data headers use this too  */
-  font-size: 18px;
-  font-family: "Times New Roman", Times, serif;
-  text-align: center;
-}
-</style>
 
 
 
 
-```{r, message=FALSE}
+```{r, message=FALSE,echo=FALSE,results=FALSE}
 library(HistData)
 library(tidyverse)
 library(zeallot)
@@ -41,34 +24,79 @@ setwd("C:/Users/weyen/OneDrive/Documents/Warhawk Softball/Warhawk-Softball")
 
 # Import the CSV file using read.csv()
 wh <- read.csv("2022 GSC SOFTBALL HITTING.csv")
-wh
+#wh
 
 summary(wh)
 c(q1,md,mm,q3)%<-%summary(wh)[2:5]
-mad_values <- apply(wh[, 2:ncol(wh)], 2, mad)
+mad_values <- apply(wh[,3:ncol(wh)],2, mad)
 mad_values
 iqr<-q3<-q1
-apply(wh[, 2:ncol(wh)], 2, fivenum)
-#fivenum(wh)[2:5]
-#m <- sum(wh)/length(wh)
+iqr
+apply(wh[, 3:ncol(wh)], 2, fivenum)
 
-bp_AVG<-wh %>% 
+AUM<-wh %>% filter(School == "Auburn Montgomery")
+UAH<-wh %>% filter(School == "Alabama Huntsville")
+GSC<-wh %>% filter(School != "Auburn Montgomery")
+GSC
+UAH
+AUM
+```
+
+
+# Leauge-wise Batting Average Visualisation
+```{r, echo=FALSE, message=FALSE}
+
+bp_AVG_AUM<-AUM %>% 
   ggplot(aes(AVG)) +
-  geom_boxplot(color="orange", fill="black", size=1, outlier.shape = 7)
+  geom_boxplot(color="orange", fill="black", size=.2, outlier.shape = 7)+ggtitle("AUM Boxplot")
 
-qq_AVG<-ggplot(wh, aes(sample = AVG)) +
-  geom_qq()
+bp_AVG_UAH<-UAH %>% 
+  ggplot(aes(AVG)) +
+  geom_boxplot(color="blue", fill="black", size=.2, outlier.shape = 7)+ggtitle("UAH Boxplot")
 
-d_AVG<-wh %>% ggplot(aes(AVG)) +
-  geom_density(fill="orange", adjust=.05)+ggtitle("Density Plot")
+bp_AVG_GSC<-GSC %>% 
+  ggplot(aes(AVG)) +
+  geom_boxplot(color="red", fill="yellow", size=.2, outlier.shape = 7)+ggtitle("GSC Boxplot")
 
-h_AVG<-wh %>% 
+qq_AVG_AUM<-ggplot(AUM, aes(sample = AVG)) +
+  geom_qq()+ggtitle("AUM qq Plot")
+
+qq_AVG_UAH<-ggplot(UAH, aes(sample = AVG)) +
+  geom_qq()+ggtitle("UAH qq Plot")
+
+qq_AVG_GSC<-ggplot(GSC, aes(sample = AVG)) +
+  geom_qq()+ggtitle("GSC qq Plot")
+
+d_AVG_AUM<-AUM %>% ggplot(aes(AVG)) +
+  geom_density(fill="orange", adjust=.1)+ggtitle("AUM Density Plot")
+
+d_AVG_UAH<-UAH %>% ggplot(aes(AVG)) +
+  geom_density(fill="blue", adjust=.1)+ggtitle("UAH Density Plot")
+
+d_AVG_GSC<-GSC %>% ggplot(aes(AVG)) +
+  geom_density(color='yellow',fill="red", adjust=.1)+ggtitle("GSC Density Plot")
+
+h_AVG_AUM<-AUM %>% 
   ggplot(aes(AVG)) + 
-  geom_histogram(color='black', fill='orange')+ggtitle("Histogram")
+  geom_histogram(color='black', fill='orange',bins=10)+ggtitle("AUM Histogram")
 
-b_AVG<-wh %>% ggplot(aes(AVG)) + geom_bar(color= 'orange', fill='black')+ggtitle("Barplot")
+h_AVG_UAH<-UAH %>% 
+  ggplot(aes(AVG)) + 
+  geom_histogram(color='black', fill='blue',bins=10)+ggtitle("UAH Histogram")
 
-grid.arrange(bp_AVG,qq_AVG,d_AVG,h_AVG,b_AVG, ncol = 3, nrow=2 )
+h_AVG_GSC<-GSC %>% 
+  ggplot(aes(AVG)) + 
+  geom_histogram(color='yellow', fill='red',bins=10)+ggtitle("GSC Histogram")
+
+b_AVG_AUM<-AUM %>% ggplot(aes(AVG)) + geom_bar(color= 'orange', fill='black')+ggtitle("AUM Barplot")
+
+b_AVG_UAH<-UAH %>% ggplot(aes(AVG)) + geom_bar(color= 'blue', fill='black')+ggtitle("AUM Barplot")
+
+b_AVG_GSC<-GSC %>% ggplot(aes(AVG)) + geom_bar(color= 'red', fill='yellow')+ggtitle("GSC Barplot")
+
+grid.arrange(bp_AVG_AUM,bp_AVG_UAH,bp_AVG_GSC,qq_AVG_AUM,qq_AVG_UAH,qq_AVG_GSC,
+             d_AVG_AUM,d_AVG_UAH,d_AVG_GSC,h_AVG_AUM,h_AVG_UAH,h_AVG_GSC,
+             b_AVG_AUM,b_AVG_UAH,b_AVG_GSC, ncol = 3 )
 ``` 
 
 
