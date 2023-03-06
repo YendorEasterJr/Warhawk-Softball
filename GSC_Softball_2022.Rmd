@@ -43,6 +43,21 @@ apply(wh[, 3:ncol(wh)], 2, fivenum)
 AUM<-wh %>% filter(School == "Auburn Montgomery")
 UAH<-wh %>% filter(School == "Alabama Huntsville")
 GSC<-wh %>% filter(School != "Auburn Montgomery")
+WA<-wh %>% filter(School == "West Alabama")
+WF<-wh %>% filter(School == "West Florida")
+M<-wh %>% filter(School == "Montevallo")
+L<-wh %>% filter(School == "Lee")
+WG<-wh %>% filter(School == "West Georgia")
+DS<-wh %>% filter(School == "Delta State")
+U<-wh %>% filter(School == "Union")
+VS<-wh %>% filter(School == "Valdosta State")
+MC<-wh %>% filter(School == "Mississippi College")
+CB<-wh %>% filter(School == "Christian Brothers")
+S<-wh %>% filter(School == "Shorter")
+
+top_4 <- wh %>% filter(School %in% c("Auburn Montgomery", "Valdosta State", "Alabama Huntsville", "West Florida"))
+
+top_4
 GSC
 UAH
 AUM
@@ -81,41 +96,23 @@ AUM
 =
 =
 =
+=
+=
+=
+=
 
 
-```{r, echo=FALSE}
-g <- ggplot(wh, aes(School))
-g + geom_bar(aes(School), width = 0.5) + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
-  labs(title="Player Count per school", 
-       subtitle="Top League Batters", 
-       caption="Source: GSC.com")
+# Sabermetrics 
+## In sports analytics, sabermetrics (originally SABRmetrics) is the empirical 
+## analysis of baseball, especially baseball statistics that measure in-game 
+## activity. Sabermetricians collect and summarize the relevant data from this 
+## in-game activity to answer specific questions. The term is derived from the 
+## acronym SABR, which stands for the Society for American Baseball Research, 
+## founded in 1971. The term "sabermetrics" was coined by Bill James, who is 
+## one of its pioneers and is often considered its most prominent advocate and 
+## public face.(SOURCE: WIKIPEDIA)
 
-theme_set(theme_bw())
-
-```
-```{r,echo=FALSE, message=FALSE, warning=FALSE}
-
-# Scatterplot
-theme_set(theme_bw())  # pre-set the bw theme.
-colors <- c("blue", "orange",  "#FF0000","#228B22", "#8A2BE2",
-            "#7FFF00", "#FFC0CB", "#008080", "#FF1493", "#00BFFF",
-            "#F4A460", "#800080", "#00FF00")
-
-# Create the plot
-g <- ggplot(wh, aes(AVG, OPS, group=School, color=School)) + 
-  geom_count() + 
-  geom_smooth(method="lm", se=F) +
-  # Set the color palette using scale_color_manual
-  scale_color_manual(values=colors)
-
-
-ggMarginal(g, type = "histogram", fill="transparent")
-ggMarginal(g, type = "boxplot", fill="transparent")
-ggMarginal(g, type = "density", fill="transparent")
-```
-
-
+# ==========================================================================
 
 # Definitions provided by mlb.com
 
@@ -142,12 +139,12 @@ credited to a batter when the batter safely reaches or passes first base
 after hitting the ball into fair territory with neither the benefit of an error 
 nor a fielder's choice
 
-## Double(2B)-
+## Double(X2B)-
 A batter is credited with a double when he hits the ball into play 
 and reaches second base without the help of an intervening error or attempt to 
 put out another baserunner
 
-## Triple(3B)-
+## Triple(X3B)-
 a triple occurs when a batter hits the ball into play and reaches 
 third base without the help of an intervening error or attempt to put out 
 another baserunner
@@ -208,14 +205,85 @@ A sacrifice fly occurs when a batter hits a fly-ball out to
 the outfield or foul territory that allows a runner to score. The batter is 
 given credit for an RBI.
 
-## Sacrafice hit (SH)-
+## Sacrifice hit (SH)-
 A sacrifice bunt occurs when a player is successful in his 
 attempt to advance a runner (or multiple runners) at least one base with a bunt. 
 In this vein, the batter is sacrificing himself (giving up an out) in order to 
 move another runner closer to scoring.
 
+
+# Data Summary
+```{r, echo=FALSE}
+head(wh)
+summary(wh)
+mad_values
+```
+# Mean Absolute Deviation
+```{r, echo=FALSE}
+
+mad_values
+```
+```{r,echo=FALSE}
+g <- ggplot(wh, aes(School))
+g + geom_bar(aes(School), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  labs(title="Player Count per school", 
+       subtitle="Top League Batters", 
+       caption="Source: GSC.com")
+
+theme_set(theme_bw())
+
+```
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+colors <- c("blue", "orange",  "darkred","red", "darkturquoise",
+            "#7FFF00", "#FFC0CB", "#008080", "#FF1493", "#00BFFF",
+            "#F4A460", "#800080", "#00FF00")
+
+# Create the plot
+g <- ggplot(wh, aes(AVG, OPS, group=School, color=School)) + 
+  geom_count() + 
+  geom_smooth(method="lm", se=F) +
+  # Set the color palette using scale_color_manual
+  scale_color_manual(values=colors)
+
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+colors <- c("blue", "orange","red", "darkturquoise")
+
+# Create the plot
+g <- ggplot(top_4, aes(AVG, OPS, group=School, color=School)) + 
+  geom_count() + 
+  geom_smooth(method="lm", se=F) +
+  # Set the color palette using scale_color_manual
+  scale_color_manual(values=colors)
+
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+
 ```{r, echo=FALSE}
 # plot
+g <- ggplot(top_4, aes(AVG,School))
+g + geom_violin() + 
+  labs(title="Violin plot", 
+       subtitle="Batting AVG by Team",
+       caption="Source: GSC.com",
+       x="Batting Average",
+       y="School")
+
+theme_set(theme_classic())
 g <- ggplot(wh, aes(AVG,School))
 g + geom_violin() + 
   labs(title="Violin plot", 
@@ -228,6 +296,13 @@ theme_set(theme_classic())
 
 # Plot
 g <- ggplot(wh, aes(AVG))
+g + geom_density(aes(fill=factor(School)), alpha=0.8) + 
+    labs(title="Density plot", 
+         subtitle="Batting Average by School",
+         caption="Source: GSC.com",
+         x="Batting Average",
+         fill="School")
+g <- ggplot(top_4, aes(AVG))
 g + geom_density(aes(fill=factor(School)), alpha=0.8) + 
     labs(title="Density plot", 
          subtitle="Batting Average by School",
