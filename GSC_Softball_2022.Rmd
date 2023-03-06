@@ -16,6 +16,8 @@ library(zeallot)
 library(ggplot2)
 library(gridExtra)
 library(ggExtra)
+library(dslabs)
+library(data.table)
 include_graphics("AUM.jpg")
 ```
 ```{r, echo=FALSE}
@@ -31,6 +33,9 @@ setwd("C:/Users/weyen/OneDrive/Documents/Warhawk Softball/Warhawk-Softball")
 # Import the CSV file using read.csv()
 wh <- read.csv("2022 GSC SOFTBALL HITTING.csv")
 #wh
+
+wh <- setDT(wh)
+wh[, ":="(wOBA = ((.72*(BB))+(.884*(H-X2B-X3B-HR-BB))+(1.257*(X2B))+(1.593*(X3B))+(2.058*(HR))) / (AB+SH+BB+HPB))]
 
 summary(wh)
 #c(q1,md,mm,q3)%<-%summary(wh)[3:ncol(wh)]
@@ -74,14 +79,15 @@ AUM
 ## at the NCAA D2 Softball World Series.
 # ==========================================================================
 
-## This project will analyze overall Gulf South Conference(GSC) hitter through a 
-## method of sabermetrics to explore trends that led to how AUM became 2022 
-## Conference Champions. This presentation will compare statistics to compare 
-## the year's offensive performance between AUM and GSC listed from data  
-## scraped directly from the Gulf South Conference's own website.Furthermore, 
-## AUM and UAH(University of Alabama-Huntsville) will be directly compared,  
-## since the teams faced off in th GSC tournament final and the NCAA Super 
-## Regional final.
+## This project will analyze overall Gulf South Conference(GSC) hitter data 
+## through a method of sabermetrics to explore trends that led to how AUM became
+## 2022 Conference Champions. This presentation will compare statistics to 
+## compare the year's offensive performance between AUM and GSC listed from data  
+## scraped directly from the Gulf South Conference's own website.Publicly posted 
+## MLB weights will be used to calculate and add a column for 2022 weights in 
+## order to calculate WOBA(weighted on-base average).Furthermore, AUM and 
+## UAH(University of Alabama-Huntsville) will be directly compared, since the 
+## teams faced off in the GSC tournament final and the NCAA Super Regional final.
 # ==================================================
 ## My hypothesis is that the hitting data will present trends that indicate how 
 ## AUM dominated their competition. It should be noted that defensive and 
@@ -211,12 +217,17 @@ attempt to advance a runner (or multiple runners) at least one base with a bunt.
 In this vein, the batter is sacrificing himself (giving up an out) in order to 
 move another runner closer to scoring.
 
+## Weighted on-base average(wOBA)-
+provides data points on a hitter’s offense based on the outcome of each hit 
+(single vs. triple, etc), and the linear weights of the equation are determined
+by the year-to-year value of each outcome.
+
 
 # Data Summary
 ```{r, echo=FALSE}
 head(wh)
 summary(wh)
-mad_values
+
 ```
 # Mean Absolute Deviation
 ```{r, echo=FALSE}
@@ -358,7 +369,7 @@ h_AVG_GSC<-GSC %>%
 
 b_AVG_AUM<-AUM %>% ggplot(aes(AVG)) + geom_bar(color= 'orange', fill='black')+ggtitle("AUM Barplot")
 
-b_AVG_UAH<-UAH %>% ggplot(aes(AVG)) + geom_bar(color= 'blue', fill='black')+ggtitle("AUM Barplot")
+b_AVG_UAH<-UAH %>% ggplot(aes(AVG)) + geom_bar(color= 'blue', fill='black')+ggtitle("UAH Barplot")
 
 b_AVG_GSC<-GSC %>% ggplot(aes(AVG)) + geom_bar(color= 'red', fill='yellow')+ggtitle("GSC Barplot")
 
@@ -415,7 +426,7 @@ h_OPS_GSC<-GSC %>%
 
 b_OPS_AUM<-AUM %>% ggplot(aes(OPS)) + geom_bar(color= 'orange', fill='black')+ggtitle("AUM Barplot")
 
-b_OPS_UAH<-UAH %>% ggplot(aes(OPS)) + geom_bar(color= 'blue', fill='black')+ggtitle("AUM Barplot")
+b_OPS_UAH<-UAH %>% ggplot(aes(OPS)) + geom_bar(color= 'blue', fill='black')+ggtitle("UAH Barplot")
 
 b_OPS_GSC<-GSC %>% ggplot(aes(OPS)) + geom_bar(color= 'red', fill='yellow')+ggtitle("GSC Barplot")
 
