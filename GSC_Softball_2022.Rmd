@@ -7,7 +7,11 @@ output:
   html_document:
     df_print: paged
   word_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, echo=FALSE,message=FALSE, fig.align="center"}
 library(knitr)
 library(HistData)
@@ -20,6 +24,7 @@ library(dslabs)
 library(data.table)
 include_graphics("AUM.jpg")
 ```
+
 ```{r, echo=FALSE}
 include_graphics("GSC_map.jpg")
 include_graphics("Gulf_South_Conference_logo.svg.PNG")
@@ -36,6 +41,11 @@ wh <- read.csv("2022 GSC SOFTBALL HITTING.csv")
 
 wh <- setDT(wh)
 wh[, ":="(wOBA = ((.72*(BB))+(.884*(H-X2B-X3B-HR-BB))+(1.257*(X2B))+(1.593*(X3B))+(2.058*(HR))) / (AB+SH+BB+HPB))]
+wh[, ":="(PA = (AB+SH+BB+HPB))]
+wh[, ":="(BABIP= ((H-HR)/(AB-HR)))]
+wh[, ":="(RC = ((H+BB)*TB)/(AB+BB))]
+wh[, ":="(SA = ((TB-H+BB)/(AB)))]
+wh[, ":="(ISO = ((X2B+X3B*2+HR*3)/(AB)))]
 
 summary(wh)
 #c(q1,md,mm,q3)%<-%summary(wh)[3:ncol(wh)]
@@ -69,53 +79,78 @@ AUM
 
 ```
 
+## In 2022, the softball team representing Auburn University at Montgomery were
 
+## regular season and tournament champions in the Gulf South Conference. They
 
+## went on to become NCAA regional champions and super-regional champions,
 
-## In 2022, the softball team representing Auburn University at Montgomery were 
-## regular season and tournament champions in the Gulf South Conference. They 
-## went on to become NCAA regional champions and super-regional champions,  
-## and went on to Denver to represent AUM(Auburn University at Montgomery)  
+## and went on to Denver to represent AUM(Auburn University at Montgomery)
+
 ## at the NCAA D2 Softball World Series.
+
 # ==========================================================================
 
-## This project will analyze overall Gulf South Conference(GSC) hitter data 
+## This project will analyze overall Gulf South Conference(GSC) hitter data
+
 ## through a method of sabermetrics to explore trends that led to how AUM became
-## 2022 Conference Champions. This presentation will compare statistics to 
-## compare the year's offensive performance between AUM and GSC listed from data  
-## scraped directly from the Gulf South Conference's own website.Publicly posted 
-## MLB weights will be used to calculate and add a column for 2022 weights in 
-## order to calculate WOBA(weighted on-base average).Furthermore, AUM and 
-## UAH(University of Alabama-Huntsville) will be directly compared, since the 
+
+## 2022 Conference Champions. This presentation will compare statistics to
+
+## compare the year's offensive performance between AUM and GSC listed from data
+
+## scraped directly from the Gulf South Conference's own website.Publicly posted
+
+## MLB weights will be used to calculate and add a column for 2022 weights in
+
+## order to calculate WOBA(weighted on-base average).Furthermore, AUM and
+
+## UAH(University of Alabama-Huntsville) will be directly compared, since the
+
 ## teams faced off in the GSC tournament final and the NCAA Super Regional final.
+
 # ==================================================
-## My hypothesis is that the hitting data will present trends that indicate how 
-## AUM dominated their competition. It should be noted that defensive and 
-## pitching data are not currently being analyzed in this project. Thus, if the 
-## hypothesis is significantly contradicted this could be pointing to that the 
-## defensive/pitching could explain AUM's success. Likely through analysis 
-## beyond the current scope of this presentation, all three categories play key 
+
+## My hypothesis is that the hitting data will present trends that indicate how
+
+## AUM dominated their competition. It should be noted that defensive and
+
+## pitching data are not currently being analyzed in this project. Thus, if the
+
+## hypothesis is significantly contradicted this could be pointing to that the
+
+## defensive/pitching could explain AUM's success. Likely through analysis
+
+## beyond the current scope of this presentation, all three categories play key
+
 ## roles in the 2022 season.
 
-=
-=
-=
-=
-=
-=
-=
-=
+# =
+
+# =
+
+# =
+
+# =
+
 =
 
+# Sabermetrics
 
-# Sabermetrics 
-## In sports analytics, sabermetrics (originally SABRmetrics) is the empirical 
-## analysis of baseball, especially baseball statistics that measure in-game 
-## activity. Sabermetricians collect and summarize the relevant data from this 
-## in-game activity to answer specific questions. The term is derived from the 
-## acronym SABR, which stands for the Society for American Baseball Research, 
-## founded in 1971. The term "sabermetrics" was coined by Bill James, who is 
-## one of its pioneers and is often considered its most prominent advocate and 
+## In sports analytics, sabermetrics (originally SABRmetrics) is the empirical
+
+## analysis of baseball, especially baseball statistics that measure in-game
+
+## activity. Sabermetricians collect and summarize the relevant data from this
+
+## in-game activity to answer specific questions. The term is derived from the
+
+## acronym SABR, which stands for the Society for American Baseball Research,
+
+## founded in 1971. The term "sabermetrics" was coined by Bill James, who is
+
+## one of its pioneers and is often considered its most prominent advocate and
+
 ## public face.(SOURCE: WIKIPEDIA)
 
 # ==========================================================================
@@ -123,117 +158,139 @@ AUM
 # Definitions provided by mlb.com
 
 ## Batting Average(AVG)-
-batting average is determined by dividing a player's hits 
-by his total at-bats for a number between zero (shown as .000) and one (1.000)
 
-## On-base Plus Slugging(OPS)- 
-adds on-base percentage and slugging percentage to 
-get one number that unites the two. It's meant to combine how well a hitter can 
-reach base, with how well he can hit for average and for power
+batting average is determined by dividing a player's hits by his total
+at-bats for a number between zero (shown as .000) and one (1.000)
+
+## On-base Plus Slugging(OPS)-
+
+adds on-base percentage and slugging percentage to get one number that
+unites the two. It's meant to combine how well a hitter can reach base,
+with how well he can hit for average and for power
 
 ## At Bat(AB)-
-An official at-bat comes when a batter reaches base via a fielder's 
-choice, hit or an error (not including catcher's interference) or when a batter 
-is put out on a non-sacrifice. (Whereas a plate appearance refers to each 
-completed turn batting, regardless of the result.)
+
+An official at-bat comes when a batter reaches base via a fielder's
+choice, hit or an error (not including catcher's interference) or when a
+batter is put out on a non-sacrifice. (Whereas a plate appearance refers
+to each completed turn batting, regardless of the result.)
 
 ## Run(R)-
-A player is awarded a run if he crosses the plate to score his team a run
 
-## Hit(H)- 
-credited to a batter when the batter safely reaches or passes first base 
-after hitting the ball into fair territory with neither the benefit of an error 
-nor a fielder's choice
+A player is awarded a run if he crosses the plate to score his team a
+run
+
+## Hit(H)-
+
+credited to a batter when the batter safely reaches or passes first base
+after hitting the ball into fair territory with neither the benefit of
+an error nor a fielder's choice
 
 ## Double(X2B)-
-A batter is credited with a double when he hits the ball into play 
-and reaches second base without the help of an intervening error or attempt to 
-put out another baserunner
+
+A batter is credited with a double when he hits the ball into play and
+reaches second base without the help of an intervening error or attempt
+to put out another baserunner
 
 ## Triple(X3B)-
-a triple occurs when a batter hits the ball into play and reaches 
-third base without the help of an intervening error or attempt to put out 
+
+a triple occurs when a batter hits the ball into play and reaches third
+base without the help of an intervening error or attempt to put out
 another baserunner
 
 ## Home Run(HR)-
-A home run occurs when a batter hits a fair ball and scores on the 
-play without being put out or without the benefit of an error
+
+A home run occurs when a batter hits a fair ball and scores on the play
+without being put out or without the benefit of an error
 
 ## Runs Batted In(RBI)-
-A batter is credited with an RBI in most cases where the 
-result of his plate appearance is a run being scored. There are a few 
-exceptions, however. A player does not receive an RBI when the run scores as a 
+
+A batter is credited with an RBI in most cases where the result of his
+plate appearance is a run being scored. There are a few exceptions,
+however. A player does not receive an RBI when the run scores as a
 result of an error or ground into double play.
 
 ## Total Bases(TB)-
-Total bases refer to the number of bases gained by a batter 
-through his hits. A batter records one total base for a single, two total bases 
-for a double, three total bases for a triple and four total bases for a home run
+
+Total bases refer to the number of bases gained by a batter through his
+hits. A batter records one total base for a single, two total bases for
+a double, three total bases for a triple and four total bases for a home
+run
 
 ## Slugging Perecentag(SLG%)-
-Slugging percentage represents the total number of 
-bases a player records per at-bat. Unlike on-base percentage, slugging 
-percentage deals only with hits and does not include walks and hit-by-pitches in
-its equation
 
-## Walk(BB)- 
-A walk (or base on balls) occurs when a pitcher throws four pitches 
-out of the strike zone, none of which are swung at by the hitter. After 
-refraining from swinging at four pitches out of the zone, the batter is awarded 
-first base
+Slugging percentage represents the total number of bases a player
+records per at-bat. Unlike on-base percentage, slugging percentage deals
+only with hits and does not include walks and hit-by-pitches in its
+equation
 
-## Hit By Pitch(HBP)- 
-A hit-by-pitch occurs when a batter is struck by a pitched 
-ball without swinging at it. He is awarded first base as a result. Strikes 
-supersede hit-by-pitches, meaning if the umpire rules that the pitch was in the 
+## Walk(BB)-
+
+A walk (or base on balls) occurs when a pitcher throws four pitches out
+of the strike zone, none of which are swung at by the hitter. After
+refraining from swinging at four pitches out of the zone, the batter is
+awarded first base
+
+## Hit By Pitch(HBP)-
+
+A hit-by-pitch occurs when a batter is struck by a pitched ball without
+swinging at it. He is awarded first base as a result. Strikes supersede
+hit-by-pitches, meaning if the umpire rules that the pitch was in the
 strike zone or that the batter swung, the HBP is nullified.
 
 ## Strikeout(SO)-
-A strikeout occurs when a pitcher throws any combination of 
-three swinging or looking strikes to a hitter. (A foul ball counts as a strike, 
-but it cannot be the third and final strike of the at-bat. A foul tip, which is 
-caught by the catcher, is considered a third strike.)
 
-##Ground-rule Double Play(GDP)- 
-occurs when a player hits a ground ball that 
-results in multiple outs on the bases. The most common double plays are ground 
-balls where a forceout is made on the player running from first to second base, 
-then another forceout is made on the batter running to first base.
+A strikeout occurs when a pitcher throws any combination of three
+swinging or looking strikes to a hitter. (A foul ball counts as a
+strike, but it cannot be the third and final strike of the at-bat. A
+foul tip, which is caught by the catcher, is considered a third strike.)
 
-## On Base Percentage(OB%)- 
-OB% refers to how frequently a batter reaches base per 
-plate appearance. Times on base include hits, walks and hit-by-pitches, but do 
-not include errors, times reached on a fielder's choice or a dropped third 
-strike
+##Ground-rule Double Play(GDP)- occurs when a player hits a ground ball
+that results in multiple outs on the bases. The most common double plays
+are ground balls where a forceout is made on the player running from
+first to second base, then another forceout is made on the batter
+running to first base.
+
+## On Base Percentage(OB%)-
+
+OB% refers to how frequently a batter reaches base per plate appearance.
+Times on base include hits, walks and hit-by-pitches, but do not include
+errors, times reached on a fielder's choice or a dropped third strike
 
 ## Sacrafice fly(SF)-
-A sacrifice fly occurs when a batter hits a fly-ball out to 
-the outfield or foul territory that allows a runner to score. The batter is 
-given credit for an RBI.
+
+A sacrifice fly occurs when a batter hits a fly-ball out to the outfield
+or foul territory that allows a runner to score. The batter is given
+credit for an RBI.
 
 ## Sacrifice hit (SH)-
-A sacrifice bunt occurs when a player is successful in his 
-attempt to advance a runner (or multiple runners) at least one base with a bunt. 
-In this vein, the batter is sacrificing himself (giving up an out) in order to 
-move another runner closer to scoring.
+
+A sacrifice bunt occurs when a player is successful in his attempt to
+advance a runner (or multiple runners) at least one base with a bunt. In
+this vein, the batter is sacrificing himself (giving up an out) in order
+to move another runner closer to scoring.
 
 ## Weighted on-base average(wOBA)-
-provides data points on a hitter’s offense based on the outcome of each hit 
-(single vs. triple, etc), and the linear weights of the equation are determined
-by the year-to-year value of each outcome.
 
+provides data points on a hitter's offense based on the outcome of each
+hit (single vs. triple, etc), and the linear weights of the equation are
+determined by the year-to-year value of each outcome.
 
 # Data Summary
+
 ```{r, echo=FALSE}
 head(wh)
 summary(wh)
 
 ```
+
 # Mean Absolute Deviation
+
 ```{r, echo=FALSE}
 
 mad_values
 ```
+
 ```{r,echo=FALSE}
 g <- ggplot(wh, aes(School))
 g + geom_bar(aes(School), width = 0.5) + 
@@ -245,6 +302,7 @@ g + geom_bar(aes(School), width = 0.5) +
 theme_set(theme_bw())
 
 ```
+
 ```{r,echo=FALSE, message=FALSE, warning=FALSE}
 
 # Scatterplot
@@ -265,6 +323,7 @@ ggMarginal(g, type = "histogram", fill="transparent")
 ggMarginal(g, type = "boxplot", fill="transparent")
 ggMarginal(g, type = "density", fill="transparent")
 ```
+
 ```{r,echo=FALSE, message=FALSE, warning=FALSE}
 
 # Scatterplot
@@ -273,6 +332,62 @@ colors <- c("blue", "orange","red", "darkturquoise")
 
 # Create the plot
 g <- ggplot(top_4, aes(AVG, OPS, group=School, color=School)) + 
+  geom_count() + 
+  geom_smooth(method="lm", se=F) +
+  # Set the color palette using scale_color_manual
+  scale_color_manual(values=colors)
+
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+colors <- c("blue", "orange","red", "darkturquoise")
+
+# Create the plot
+g <- ggplot(top_4, aes(ISO, BABIP, group=School, color=School)) + 
+  geom_count() + 
+  geom_smooth(method="lm", se=F) +
+  # Set the color palette using scale_color_manual
+  scale_color_manual(values=colors)
+
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+colors <- c("blue", "orange","red", "darkturquoise")
+
+# Create the plot
+g <- ggplot(top_4, aes(RC,SA, OPS, group=School, color=School)) + 
+  geom_count() + 
+  geom_smooth(method="lm", se=F) +
+  # Set the color palette using scale_color_manual
+  scale_color_manual(values=colors)
+
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+```
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+colors <- c("blue", "orange","red", "darkturquoise")
+
+# Create the plot
+g <- ggplot(top_4, aes(AVG, wOBA, group=School, color=School)) + 
   geom_count() + 
   geom_smooth(method="lm", se=F) +
   # Set the color palette using scale_color_manual
@@ -304,6 +419,9 @@ g + geom_violin() +
        y="School")
 
 theme_set(theme_classic())
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
 
 # Plot
 g <- ggplot(wh, aes(AVG))
@@ -322,7 +440,28 @@ g + geom_density(aes(fill=factor(School)), alpha=0.8) +
          fill="School")
 ```
 
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+# Plot
+g <- ggplot(wh, aes(wOBA))
+g + geom_density(aes(fill=factor(School)), alpha=0.8) + 
+    labs(title="Density plot", 
+         subtitle="wOBA by School",
+         caption="Source: GSC.com",
+         x="wOBA",
+         fill="School")
+```
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+g <- ggplot(top_4, aes(wOBA))
+g + geom_density(aes(fill=factor(School)), alpha=0.8) + 
+    labs(title="Density plot", 
+         subtitle="wOBA by School",
+         caption="Source: GSC.com",
+         x="wOBA",
+         fill="School")
+```
+
 # Leauge-wise Batting Average Visualisation
+
 ```{r, echo=FALSE,  fig.height=8, fig.asp = 1.15}
 
 bp_AVG_AUM<-AUM %>% 
@@ -376,10 +515,10 @@ b_AVG_GSC<-GSC %>% ggplot(aes(AVG)) + geom_bar(color= 'red', fill='yellow')+ggti
 grid.arrange(bp_AVG_AUM,bp_AVG_UAH,bp_AVG_GSC,qq_AVG_AUM,qq_AVG_UAH,qq_AVG_GSC,
              d_AVG_AUM,d_AVG_UAH,d_AVG_GSC,h_AVG_AUM,h_AVG_UAH,h_AVG_GSC,
              b_AVG_AUM,b_AVG_UAH,b_AVG_GSC, ncol = 3 )
-``` 
-
+```
 
 # Leauge-wise OPS Visualisation
+
 ```{r, echo=FALSE,  fig.height=8, fig.asp = 1.15}
 
 bp_OPS_AUM<-AUM %>% 
@@ -433,6 +572,4 @@ b_OPS_GSC<-GSC %>% ggplot(aes(OPS)) + geom_bar(color= 'red', fill='yellow')+ggti
 grid.arrange(bp_OPS_AUM,bp_OPS_UAH,bp_OPS_GSC,qq_OPS_AUM,qq_OPS_UAH,qq_OPS_GSC,
              d_OPS_AUM,d_OPS_UAH,d_OPS_GSC,h_OPS_AUM,h_OPS_UAH,h_OPS_GSC,
              b_OPS_AUM,b_OPS_UAH,b_OPS_GSC, ncol = 3 )
-``` 
-
-
+```
